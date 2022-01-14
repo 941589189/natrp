@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddt.natrp.web.mapper.ReportInputMapper">
+    <resultMap id="ReportInResultMap" type="com.ddt.natrp.web.domain.laboratory.InReport">
+        <id     property="doctadviseno"     column="doctadviseno"   />
+        <result property="sampleno"         column="sampleno"       />
+        <result property="requester"        column="requester"      />
+        <result property="requestTime"      column="requesttime"    />
+        <result property="patientId"        column="patientid"      />
+        <result property="patientName"      column="patientname"    />
+        <result property="sex"              column="sex"            />
+        <result property="age"              column="age"            />
+        <result property="examinaim"        column="examinaim"      />
+        <result property="sampleType"       column="sampletype"     />
+        <result property="result"           column="result"         />
+        <result property="sampleStatus"     column="samplestatus"  />
+        <result property="checkTime"        column="checktime"      />
+        <result property="checktor"         column="checktor"       />
+        <result property="section"          column="section"        />
+        <result property="bedNo"            column="bed_no"         />
+        <result property="brxz"             column="brxz"           />
+    </resultMap>
+
+    <sql id="selectVo">
+        select doctadviseno, sampleno, requester, requesttime, patientid, patientname, sex, age, examinaim, sampletype,
+            result, samplestatus, checktime, checktor from L_JYTMXX
+    </sql>
+
+    <select id="selectReportList" resultMap="ReportInResultMap">
+        <include refid="selectVo" />
+        <where>
+            <if test="doctadviseno != null and doctadviseno != ''">doctadviseno = #{doctadviseno} and </if>
+            <if test="sampleno != null and sampleno != ''">sampleno = #{sampleno} and </if>
+            <if test="requestTime != null">requesttime = #{requestTime} and </if>
+            <if test="patientId != null and patientId != ''">patientid = #{patientId} and </if>
+            <if test="patientName != null and patientName != ''">patientname = #{patientName} and </if>
+            <if test="sex != null and sex != ''">sex = #{sex} and </if>
+            <if test="examinaim != null and examinaim != ''">examinaim = #{examinaim} and </if>
+            <if test="sampleType != null and sampleType != ''">sampletype = #{sampleType} and </if>
+            <if test="result != null and result != ''">result = #{result} and </if>
+            <if test="sampleStatus != null and sampleStatus != ''">samplestatus = #{sampleStatus} and </if>
+            <if test="checkTime != null and checkTime != ''">checktime = #{checkTime} and </if>
+            <if test="checktor != null and checktor != ''">checktor = #{checktor} and </if>
+            requester is not null order by requesttime desc
+        </where>
+    </select>
+
+    <insert id="insertReport" parameterType="com.ddt.natrp.web.domain.laboratory.InReport">
+        insert into l_jytmxx(
+        <if test="sampleno != null and sampleno != ''">sampleno, </if>
+        <if test="requester != null and requester != ''">requester, </if>
+        <if test="requestTime != null">requesttime, </if>
+        <if test="patientId != null and patientId != ''">patientid, </if>
+        <if test="patientName != null and patientName != ''">patientname, </if>
+        <if test="sex != null and sex != ''">sex, </if>
+        <if test="age != null and age != ''">age, </if>
+        <if test="section != null and section != ''">section, </if>
+        <if test="bedNo != null and bedNo != ''">bed_no, </if>
+        <if test="brxz != null and brxz != ''">brxz, </if>
+        <if test="examinaim != null and examinaim != ''">examinaim, </if>
+        <if test="sampleType != null and sampleType != ''">sampletype, </if>
+        <if test="result != null and result != ''">result, </if>
+        <if test="sampleStatus != null and sampleStatus != ''">samplestatus, </if>
+        <if test="checkTime != null and checkTime != ''">checktime, </if>
+        <if test="checktor != null and checktor != ''">checktor, </if>
+        doctadviseno
+        )value(
+            <if test="sampleno != null and sampleno != ''">#{sampleno}, </if>
+            <if test="requester != null and requester != ''">#{requester}, </if>
+            <if test="requestTime != null"> #{requestTime},</if>
+            <if test="patientId != null and patientId != ''">#{patientId}, </if>
+            <if test="patientName != null and patientName != ''">#{patientName}, </if>
+            <if test="sex != null and sex != ''">#{sex}, </if>
+            <if test="age != null and age != ''">#{age}, </if>
+            <if test="section != null and section != ''">#{section}, </if>
+            <if test="bedNo != null and bedNo != ''">#{bedNo}, </if>
+            <if test="brxz != null and brxz != ''">#{brxz}, </if>
+            <if test="examinaim != null and examinaim != ''"> #{examinaim}, </if>
+            <if test="sampleType != null and sampleType != ''"> #{sampleType}, </if>
+            <if test="result != null and result != ''">#{result},</if>
+            <if test="sampleStatus != null and sampleStatus != ''">#{sampleStatus}, </if>
+            <if test="checkTime != null and checkTime != ''">#{checkTime},</if>
+            <if test="checktor != null and checktor != ''">#{checktor}, </if>
+            #{doctadviseno}
+        )
+    </insert>
+
+</mapper>

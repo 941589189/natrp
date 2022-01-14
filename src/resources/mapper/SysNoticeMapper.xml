@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddt.natrp.web.mapper.SysNoticeMapper">
+    <resultMap id="SysNoticeResultMap" type="com.ddt.natrp.web.domain.system.SysNotice">
+        <id     property="noticeId"     column="notice_id"  />
+        <result property="text"         column="text"       />
+        <result property="user"         column="user"       />
+        <result property="createTime"   column="create_time"/>
+    </resultMap>
+
+    <sql id="selectVo">
+        select notice_id, text, user, create_time from sys_notice
+    </sql>
+
+    <select id="selectNoticeById" parameterType="Long" resultMap="SysNoticeResultMap">
+        <include refid="selectVo" />
+        where notice_id = #{noticeId}
+    </select>
+
+    <select id="selectNoticeNow"  resultMap="SysNoticeResultMap">
+        <include refid="selectVo" />
+        order by create_time desc limit 1
+    </select>
+
+    <insert id="insertNotice" parameterType="com.ddt.natrp.web.domain.system.SysNotice" useGeneratedKeys="true" keyProperty="noticeId">
+        insert into sys_notice(
+            <if test="noticeId != null and noticeId != 0">notice_id,</if>
+            <if test="text != null and text != ''">text,</if>
+            <if test="user != null and user != ''">user,</if>
+            create_time
+        )values(
+            <if test="noticeId != null and noticeId != 0">#{noticeId},</if>
+            <if test="text != null and text != ''">#{text},</if>
+            <if test="user != null and user != ''">#{user},</if>
+            sysdate()
+        )
+    </insert>
+</mapper>

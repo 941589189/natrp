@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('NATRP登录')"/>
+</head>
+
+<body>
+<div class="container" >
+    <div class="row">
+        <div class="col-md-12 column" >
+            <h2 class="text-center">
+                <em><span>新冠检测报告单系统</span></em>
+            </h2>
+        </div>
+    </div>
+    <div class ="text-center" style="position:absolute;top:35%;bottom: 20%;left:20%;right: 20%;margin: auto;">
+        <div class="col-md-6 column">
+            <h3>
+                <em>natrp()是基于springboot框架的新冠检测报告单查询平台。致力于能够通过论文答辩</em>
+            </h3>
+        </div>
+        <div class="col-md-2 column">
+
+        </div>
+        <div class="col-md-4 column">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="inputEmail" class="col-sm-3 control-label">账 号</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="inputEmail" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-sm-3 control-label">密 码</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" id="inputPassword" />
+                    </div>
+                </div>
+                <div class="center">
+                    <div class="col-sm-offset-2 col-sm-10" >
+                        <button type="button" class="btn btn-default" id="btn" >Sign in</button>
+                        <button type="button" class="btn btn-default" id="register" style="margin-left: 20px">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--var pwd = $.base64.encode(password)-->
+</div>
+    <script th:src="@{/js/jsencrypt.min.js}"></script>
+    <script th:src="@{/js/web/login.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddt.natrp.web.mapper.SysUserMapper">
+    <resultMap id="SysUserResultMap" type="com.ddt.natrp.web.domain.system.SysUser">
+        <id     property="userId"        column="user_id"         />
+        <result property="loginName"     column="login_name"      />
+        <result property="userName"      column="user_name"       />
+        <result property="password"      column="password"        />
+        <result property="salt"          column="salt"            />
+        <result property="userType"      column="user_type"       />
+        <result property="delFlag"       column="del_flag"        />
+        <result property="status"        column="status"          />
+    </resultMap>
+
+    <sql id="selectUserVo">
+        select  u.user_id,  u.login_name, u.user_name, u.user_type,  u.password, u.salt, u.status, u.del_flag
+        from sys_user u
+    </sql>
+
+    <!-- 根据查询全部系统用户信息-->
+    <select id="selectUserList" parameterType="com.ddt.natrp.web.domain.system.SysUser" resultMap="SysUserResultMap">
+        <include refid="selectUserVo"/>
+    </select>
+
+    <select id="selectUserById" parameterType="Long" resultMap="SysUserResultMap">
+        <include refid="selectUserVo"/>
+                where user_id = #{userId}
+    </select>
+
+    <select id="selectUserByLoginName" parameterType="String" resultMap="SysUserResultMap">
+        <include refid="selectUserVo"/>
+        where login_name = #{loginName}
+    </select>
+
+    <!-- 新增用户 -->
+    <insert id = "insertUser" parameterType="com.ddt.natrp.web.domain.system.SysUser" useGeneratedKeys="true" keyProperty="userId" >
+        insert into sys_user(
+            <if test="userId != null and userId != 0">user_id,</if>
+            <if test="loginName != null and loginName != ''">login_name,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="salt != null and salt != ''">salt,</if>
+            <if test="userType != null and userType != ''">user_type,</if>
+            <if test="status != null and status != ''">status</if>
+        )values(
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="loginName != null and loginName != ''">#{loginName},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="salt != null and salt != ''">#{salt},</if>
+            <if test="userType != null and userType != ''">#{userType},</if>
+            <if test="status != null and status != ''">#{status}</if>
+        )
+    </insert>
+
+    <update id="changeStatus" parameterType="com.ddt.natrp.web.domain.system.SysUser">
+        update sys_user
+        <set>
+            <if test="loginName != null and loginName != ''">login_name = #{loginName},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="salt != null and salt != ''">salt = #{salt},</if>
+            <if test="status != null and status != ''">status = #{status}</if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteUserById" parameterType="Long">
+        delete from sys_user where user_id = userId
+    </delete>
+</mapper>

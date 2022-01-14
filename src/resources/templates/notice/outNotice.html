@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('告用户书')" />
+</head>
+<body>
+<th:block th:include="include :: body" />
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="col-md-1 column"></div>
+            <div class="col-md-10 column">
+                <div class="col-md-12 column" >
+                    <div class="carousel slide" id="carousel-535095">
+                        <ol class="carousel-indicators">
+                            <li data-slide-to="0" data-target="#carousel-535095">
+                            </li>
+                            <li data-slide-to="1" data-target="#carousel-535095" class="active">
+                            </li>
+                            <li data-slide-to="2" data-target="#carousel-535095">
+                            </li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="item">
+                                <a href="http://www.xinhuanet.com/politics/2020-09/08/c_1126468701.htm" target="_blank"><img alt="" th:src="@{/images/item/MrZhong.jpg}"  style="width:950px; height:400px;"/></a>
+                                <div class="carousel-caption">
+                                    <p id="item_1" style="font-size:20px;"> </p>
+                                </div>
+                            </div>
+                            <div class="item active">
+                                <a href="http://www.xinhuanet.com/politics/2020-11/10/c_1126722898.htm" target="_blank"><img alt="" th:src="@{/images/item/MrZhang.jpg}"  style="width:950px; height:400px;"/></a>
+                                <div class="carousel-caption">
+                                    <p id="item_2" style="font-size:20px;"> </p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <a href="http://www.xinhuanet.com/politics/2020-09/23/c_1126531684.htm" target="_blank"><img alt="" th:src="@{/images/item/MsChen.jpg}"  style="width:950px; height:400px;" /></a>
+                                <div class="carousel-caption">
+                                    <p id="item_3" style="font-size:20px;"> </p>
+                                </div>
+                            </div>
+                        </div> <a class="left carousel-control" href="#carousel-535095" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-535095" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class ="text-center"  >
+            <div class="media-body" >
+                <h3 class="media-heading" style="margin-top:30px">
+                    管理员通知
+                </h3>
+                <hr />
+                <div id="notice" class="media-body" style="font-size: 20px;">
+                    <p id="value" th:text="${text}"></p>
+                </div><br>
+                <div id="info"  class ="text-right" style="float:bottom;padding:6px;font-size: 20px;">
+                    <p id="username" th:text="${username}"></p>
+                    <p id="createTime" th:text="${createTime}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var itemValue_1 = "敢医敢言，生命至上——记“共和国勋章”获得者钟南山";
+    var itemValue_2 = "抗疫先进事迹｜张定宇：疫情“暴风眼”里，“渐冻”之躯与时间赛跑";
+    var itemValue_3 = "冲锋在抗疫一线的“科研铁军”——军事科学院军事医学专家组抗击新冠肺炎疫情记事"
+    document.getElementById("item_1").innerHTML= itemValue_1;
+    document.getElementById("item_2").innerHTML= itemValue_2;
+    document.getElementById("item_3").innerHTML= itemValue_3;
+</script>
+</body>
+</html>

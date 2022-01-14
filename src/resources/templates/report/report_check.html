@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('样本审核')" />
+    <th:block th:include="include :: table" />
+</head>
+<body>
+    <th:block th:include="include :: body" />
+    <div class="container">
+        <div class="row clearfix" >
+            <div class="col-md-12 column">
+                <div class="col-md-8 column">
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <div style="float:left;padding:6px;">
+                                <span>报告单号</span>
+                            </div>
+                            <div style="float:left;">
+                                <input type="text" class="form-control" id="search-id" />
+                            </div>
+                            <div style="float:left;padding:6px;">
+                                <span>病历号</span>
+                            </div>
+                            <div style="float:left;">
+                                <input type="text" class="form-control" id="patient-id" />
+                            </div> <button type="button" class="btn btn-default" id="query">搜索</button>
+                            <br />
+                            <div style="float:left;padding:6px;">
+                                <span>日期范围</span>
+                            </div>
+                            <div style="float:left;padding:6px;">
+                                <input id = "starttime" type="date">
+                            </div>
+                            <div style="float:left;padding:6px;">
+                                <span>至</span>
+                            </div>
+                            <div style="float:left;padding:6px;">
+                                <input id = "endtime" type="date"><span>不包含今日</span>
+                            </div>
+                        </div>
+                    </form>
+                    <span id='info' style="color:red;font-size:20px;" ></span>
+                </div>
+                <div class="col-md-1 column">
+                    <button type="button" class="btn active btn-default btn-primary" id="check_button">一键审核</button>
+                </div>
+                <div class="col-md-1 column">
+                    <button type="button" class="btn active btn-default btn-warning" id="cancel_button">审核不通过</button>
+                </div>
+                <table id="report-table" class="table table-hover table-striped table-condensed"></table>
+            </div>
+        </div>
+    </div>
+<script>
+    document.getElementById('starttime').valueAsDate = new Date();
+    document.getElementById('endtime').valueAsDate = new Date();
+    //文档加载事件
+    $(document).ready(function() {
+        // 初始化表格
+        initTable();
+    });
+    var profix = "/report/list"
+    function initTable() {
+        var t = $("#report-table").bootstrapTable({
+            url: '/report/list/time', //请求后台方法的路径
+            pagination: true,	//显示分页条
+            sidePagination: 'server',//服务器端分页,这个属性一定要有，否则不能显示查询到的结果
+            method: 'POST',                      //请求方式（*）
+            contentType :'application/x-www-form-urlencoded',
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                editable:true,
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 15,                     //每页的记录行数（*）
+                showColumns: true,                  //是否显示所有的列（选择显示的列）
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                uniqueId: "reportId",               //每一行的唯一标识，一般为主键列
+                clickToSelect: true,                //是否启用点击选中行
+            responseHandler: function (res) { //接受后台返回的结果集
+                return {
+                    rows: res.list,  // list中包含是要展示的对象
+                    total: res.total
+                }
+            },
+            queryParams: function (params) { // 前端向后台传的参数，这里也可以自定义参数
+                return {
+                    offset: params.offset, //页码
+                    limit: params.limit, //页面大小，即每一页显示的条数
+                    status: "0",  //查询未审核的报告
+                    reportId : $.trim($('#search-id').val()),
+                    patientId : $.trim($('#patient-id').val()),
+                    startTime: $('#starttime').val(),
+                    endTime: $('#endtime').val()
+                }
+            },
+            columns: [{
+                checkbox: true
+                },
+                {
+                    field: 'reportId',//该列映射的data的参数名
+                    title: '报告单ID',
+                },
+                {
+                    field: 'patient.patientName',
+                    title: '患者',
+                },
+                {
+                    field: 'patient.sex',
+                    title: '性别',
+                    formatter: function (value, row, index) {
+                        if(row.patient.sex == 1){
+                           return "<span> 男 </span>"
+                        }else if(row.patient.sex == 2){
+                           return "<span> 女 </span>"
+                        }else{
+                            return "<span> 未知 </span>"
+                        }
+                    }
+                },
+                {
+                    field: 'patient.age',
+                    title: '年龄',
+                },
+                {
+                    field: 'createTime',
+                    title: '开单时间',
+                },
+                {
+                    field: 'status',
+                    title: '报告状态',
+                    formatter: function (value, row, index) {
+                        if(row.status == 0){
+                           return "<span> 未审核 </span>"
+                        }else if(row.status == 1){
+                           return "<span> 已审核 </span>"
+                        }else if(row.status == 2){
+                            return "<span> 已打印 </span>"
+                        }else { return "<span> 作废 </span>" }
+                    }
+                },
+                {
+                    field : 'item',
+                    title : '医嘱项目'
+                },
+                {
+                    field : 'result',
+                    title : '报告结果',
+                    formatter: function (value, row, index) {
+                        return "<a id='result' data-pk=" + row.reportId + " style='border: none'  class='glyphicon glyphicon-edit'>" + value + "</a>"
+                    }
+                },
+                {
+                    field : 'sampleType',
+                    title : '样本类型',
+                    formatter: function (value, row, index) {
+                        if(row.sampleType == 0){
+                           return "<span> 咽拭子 </span>"
+                        }else if(row.sampleType == 1){
+                           return "<span> 肛拭子 </span>"
+                        }else{
+                            return "<span> 其他 </span>"
+                        }
+                    }
+                },
+                {
+                    field : 'remark',
+                    title : '备注',
+                    cellStyle: formatTableUnit,
+                    formatter: function (value, row, index) {
+                        return "<a id='remark' data-pk=" + row.reportId + " style='border: none' class='glyphicon glyphicon-edit'>" + value + "</span>"
+                    }
+                }
+            ],
+            onLoadSuccess: function(){
+                $("#report-table a").editable({
+                    validate: function (value) {          /**不为空**/
+                        if (!$.trim(value)) {
+                            return '不能为空';
+                        }
+                    },
+                    url: function (params) {
+                        $.ajax({
+                            url:"/report/update",
+                            type: "POST",
+                            dataType: JSON,
+                            data: params,
+                        })
+                    }
+                });
+            }
+        });
+    }
+    $(function() {
+	    $("#query").click(function() {
+		    $('#report-table').bootstrapTable('refreshOptions', { pageNumber:1,pageSize:30 }); // 很重要的一步，刷新url！
+	    });
+    });
+
+    /*修改备注那一列的属性  文本过长隐藏多余的部分，鼠标悬停显示全部的内容*/
+    function paramsMatter(value, row, index) {
+        var span = document.createElement('span');
+        span.setAttribute('title', value);
+        span.innerHTML = value;
+        return span.outerHTML;
+    }
+    function formatTableUnit(value, row, index) {
+        return {
+            css: {
+                "white-space": 'nowrap',
+                "text-overflow": 'ellipsis',/*当文本溢出时，溢出的部分隐藏，显示省略号*/
+                "overflow": 'hidden',
+                "max-width": "100px"
+            }
+        }
+    }
+    // 一键审核 按钮响应事件
+    $('#check_button').click(function(){
+        var checkValue = $('#report-table').bootstrapTable('getSelections');
+        if(checkValue.length<=0){
+            alert("请选择一行");
+        }else{
+            var ids = new Array();
+            for(var i=0;i<checkValue.length;i++){
+                ids.push(checkValue[i].reportId)
+            }
+            $.ajax({
+                url: '/report/status',
+                type: 'POST',
+                headers : {
+                    'Content-Type' : 'application/json;charset=utf-8'
+                },
+                dataType: 'json',
+                data: JSON.stringify(ids),
+                success: function(res){
+                    if(res.code == '0'){
+                        document.getElementById("info").innerHTML=res.msg;
+                    }else{
+                        document.getElementById("info").innerHTML=res.msg;
+                    }
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

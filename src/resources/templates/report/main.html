@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('新冠报告单系统')" />
+    <th:block th:include="include :: table" />
+</head>
+
+<body>
+<th:block th:include="include :: body" />
+<div class="container">
+    <div class="row clearfix" >
+        <div class="col-md-12 column">
+            <div class="col-md-8 column">
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <div style="float:left;padding:6px;">
+                            <span>报告单号</span>
+                        </div>
+                        <div style="float:left;">
+                            <input type="text" class="form-control" id="search-id" />
+                        </div>
+                        <div style="float:left;padding:6px;">
+                            <span>病历号</span>
+                        </div>
+                        <div style="float:left;">
+                            <input type="text" class="form-control" id="patient-id" />
+                        </div>
+                        <br />
+                        <div style="float:left;padding:6px;">
+                            <span>日期范围</span>
+                        </div>
+                        <div style="float:left;padding:6px;">
+                            <input id = "starttime" type="date">
+                        </div>
+                        <div style="float:left;padding:6px;">
+                            <span>至</span>
+                        </div>
+                        <div style="float:left;padding:6px;">
+                            <input id = "endtime" type="date"><span>不包含今日</span>
+                        </div>
+                        <br />
+                        <div style="float:left;padding:6px;">
+                            <label><input id="check_status" type="checkbox" checked="checked" value="1"/>已审核</label>
+                        </div>
+                    </div> <button type="button" class="btn btn-default" id="query">搜索</button>
+                </form>
+            </div>
+            <div class="col-md-2 column">
+            </div>
+            <div class="col-md-1 column">
+                <button type="button" class="btn active btn-default btn-primary" id="exportPDF">打印报告单</button>
+            </div>
+            <div  class="col-md-1 column">
+                <button shiro:hasRole="worker" type="button" class="btn btn-default active btn-success" id="export">Excel导出</button>
+            </div>
+            <table id="report-table" class="table table-hover table-striped table-condensed"></table>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/web/main.js}"></script>
+<script>
+    document.getElementById('starttime').valueAsDate = new Date();
+    document.getElementById('endtime').valueAsDate = new Date();
+</script>
+</body>
+</html>

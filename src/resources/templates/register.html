@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('用户注册')" />
+</head>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-4 column"></div>
+        <div class="col-md-4 column" style="margin-top: 10%">
+            <div role="form">
+                <div class="form-group">
+                    <label >昵称</label><input type="text" class="form-control" id="username" placeholder="12位以内字符或汉字"/>
+                </div>
+                <div class="form-group">
+                    <label >登录账号</label><input type="text" class="form-control" id="loginname" placeholder="12位以内字符(a-z . /)"/>
+                </div>
+                <div class="form-group">
+                    <label>输入密码</label><input type="password" class="form-control" id="password" />
+                </div>
+                <div class="form-group">
+                    <label>确认密码</label><input type="password" class="form-control" id="passwordR" />
+                </div>
+                <div class="checkbox" style="text-align:right">
+                    <label><input type="checkbox" id="check"/>我已阅读并同意隐私政策</label>
+                    <button type="button" class="btn btn-lg btn-primary" id="register">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/web/register.js}"></script>
+</body>
+</html>

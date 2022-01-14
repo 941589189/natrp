@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddt.natrp.web.mapper.PatientInfoMapper">
+    <resultMap id="PatientInfoResultMap" type="com.ddt.natrp.web.domain.laboratory.Patient">
+        <id      property="patientId"       column="patient_id"     />
+        <result  property="patientName"     column="patient_name"   />
+        <result  property="sex"             column="sex"            />
+        <result  property="age"             column="age"            />
+        <result  property="patientNo"       column="patient_no"     />
+        <result  property="serialNum"       column="serial_num"     />
+        <result  property="phoneNum"        column="phone_num"      />
+        <result  property="province"        column="province"       />
+        <result  property="city"            column="city"           />
+        <result  property="town"            column="town"           />
+        <result  property="address"         column="address"        />
+        <result  property="remark"          column="remark"         />
+        <result  property="delFlag"         column="del_flag"       />
+    </resultMap>
+    
+    <sql id="selectPatientVo">
+        select patient_id, patient_name, patient_no, serial_num, sex,age , phone_num, province, city, town, address, del_flag, remark
+            from l_patientinfo
+    </sql>
+
+    <!-- 根据查询全部患者信息-->
+    <select id="selectPatientList" parameterType="com.ddt.natrp.web.domain.laboratory.Patient" resultMap="PatientInfoResultMap">
+        <include refid="selectPatientVo"/>
+        <where>
+            del_flag = '0'
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="patientNo != null  and patientNo != ''"> and patient_no = #{patientNo}</if>
+            <if test="serialNum != null "> and serial_num = #{serialNum}</if>
+            <if test="phoneNum != null  and phoneNum != ''"> and phone_num = #{phoneNum}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="town != null  and town != ''"> and town = #{town}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+        </where>
+    </select>
+
+    <select id="selectPatientById" parameterType="Long" resultMap="PatientInfoResultMap">
+        <include refid="selectPatientVo"/>
+        where patient_id = #{patientId}
+    </select>
+
+    <insert id="insertPatient" parameterType="com.ddt.natrp.web.domain.laboratory.Patient" useGeneratedKeys="true" keyProperty="patientId">
+        insert into l_patientinfo(
+            <if test="patientName != null">patient_name,</if>  <!--如果name为空，则忽略这个字段，不插入任何东西-->
+            <if test="sex != null ">sex,</if>
+            <if test="patientNo != null and patientNo != ''">patient_no,</if>
+            <if test="serialNum != null and serialNum != ''">serial_num,</if>
+            <if test="phoneNum != null and phoneNum != ''">phone_num,</if>
+            <if test="province != null and province != ''">province,</if>
+            <if test="city != null and city != ''">city,</if>
+            <if test="town != null and town != ''">town,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="remark  != null and remark != ''">remark</if>
+        )values(
+            <if test="patientName != null">#{patientName},</if>
+            <if test="sex != null ">#{sex},</if>
+            <if test="patientNo != null and patientNo != ''">#{patientNo},</if>
+            <if test="serialNum != null and serialNum != ''">#{serialNum},</if>
+            <if test="phoneNum != null and phoneNum != ''">#{phoneNum},</if>
+            <if test="province != null and province != ''">#{province},</if>
+            <if test="city != null and city != ''">#{city},</if>
+            <if test="town != null and town != ''">#{town},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="remark  != null and remark != ''">#{remark}</if>
+        )
+    </insert>
+
+    <update id="updatePatient" parameterType="com.ddt.natrp.web.domain.laboratory.Patient">
+        update l_patientinfo
+        <set>
+            <if test="patientName != null">patient_name  = #{patientName},</if>
+            <if test="patientNo != null and patientNo != ''">patient_no = #{patientNo},</if>
+            <if test="phoneNum != null and phoneNum != ''">phone_num = #{phoneNum},</if>
+            <if test="province != null and province != ''"> province = #{province},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="town != null and town != ''">town = #{town},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="remark != null and remark != ''">remark = #{remark}</if>
+        </set>
+        where patient_id = #{patientId}
+    </update>
+
+    <delete id="deleteFinPatientById" parameterType="Long">
+        delete from l_patientinfo where patient_id = #{patientId}
+    </delete>
+</mapper>

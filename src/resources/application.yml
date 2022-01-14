@@ -1,0 +1,93 @@
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8081
+  servlet:
+    # 应用的访问路径
+    context-path: /  #端口号8081后自动填充的url
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 50
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 10
+
+spring:
+  # 模板引擎
+  thymeleaf:
+    prefix: classpath:/templates/ # 访问template下的html文件需要配置模板，映射，路径指向
+    suffix: .html
+    encoding: utf-8
+    # 禁用缓存
+    cache: false
+  profiles:
+    active: druid
+  mvc:
+    static-path-pattern: /static/**
+
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#    time-zone: GMT+8
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: false
+
+# MyBatis
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.ddt.**.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath:mapper/**/**Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+# Shiro
+shiro:
+  user:
+    # 登录地址
+    loginUrl: /login
+    # 权限认证失败地址
+    unauthorizedUrl: /unauth
+    # 首页地址
+    #indexUrl: /book/all
+    # 验证码开关
+  #    captchaEnabled: true
+  #    # 验证码类型 math 数组计算 char 字符
+  #    captchaType: math
+  cookie:
+    # 设置Cookie的域名 默认空，即当前访问的域名
+    domain:
+    # 设置cookie的有效访问路径
+    path: /
+    # 设置HttpOnly属性
+    httpOnly: true
+    # 设置Cookie的过期时间，天为单位
+    maxAge: 30
+    # 设置密钥，务必保持唯一性（生成方式，直接拷贝到main运行即可）KeyGenerator keygen = KeyGenerator.getInstance("AES"); SecretKey deskey = keygen.generateKey(); System.out.println(Base64.encodeToString(deskey.getEncoded()));
+#    cipherKey: zSyK5Kp6PZAAjlT+eeNMlg==
+  session:
+    # Session超时时间，-1代表永不过期（默认30分钟）
+    expireTime: 30
+    # 同步session到数据库的周期（默认1分钟）
+    dbSyncPeriod: 1
+    # 相隔多久检查一次session的有效性，默认就是10分钟
+    validationInterval: 10
+    # 同一个用户最大会话数，比如2的意思是同一个账号允许最多同时两个人登录（默认-1不限制）
+    maxSession: -1
+    # 踢出之前登录的/之后登录的用户，默认踢出之前登录的用户
+    kickoutAfter: false
+
+pdf:
+  windowsFileTempLoc: E:\natrp
+  linuxFileTempLoc: /usr/src/natrp/pdf
+
+swagger:
+  enabled: false

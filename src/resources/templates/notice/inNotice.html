@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('告用户书录入')" />
+</head>
+<body>
+<th:block th:include="include :: body" />
+<div class="container">
+    <div class ="text-center">
+        <textarea id="data" type="text" maxlength="3000" data-msg-required="请输入内容" style="height: 400px;;width:60%;font-size:15px;resize:none"></textarea>
+    </div>
+    <div class="col-md-2 column"></div>
+    <div class="col-md-1 column">
+        <button type="button" class="btn btn-default active btn-warning" onclick="javascript:location.reload()">清空重填</button>
+    </div>
+    <div class="col-md-5 column"></div>
+    <div class="col-md-1 column">
+        <button type="button" class="btn active btn-default btn-primary" id="save_button">保存数据</button>
+    </div>
+    <div class="col-md-3 column">
+        <input type="file"  id="fileUpload" accept="doc,.docx,.txt"/>
+    </div>
+</div>
+<script th:src="@{/js/web/notice/innotice.js}"></script>
+</body>
+</html>

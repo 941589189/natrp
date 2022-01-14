@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddt.natrp.web.mapper.ReportMapper">
+    <resultMap id="ReportResultMap" type="com.ddt.natrp.web.domain.laboratory.Report">
+        <id     property="reportId"     column="report_id" />
+        <result property="patientId"    column="patient_id" />
+        <result property="patientName"  column="patient_name"/>
+        <result property="createTime"   column="create_time"/>
+        <result property="createBy"     column="create_by"  />
+        <result property="status"       column="status"     />
+        <result property="item"         column="item"       />
+        <result property="result"       column="result"     />
+        <result property="sampleType"   column="sample_type"/>
+        <result property="receive_time"   column="receiveTime"/>
+        <result property="checkTime"    column="check_time" />
+        <result property="checktor"     column="checktor"   />
+        <result property="remark"       column="remark"     />
+        <association property="patient" column="patient_id" javaType="com.ddt.natrp.web.domain.laboratory.Patient"
+                     resultMap="patientResult"/>
+    </resultMap>
+
+    <resultMap id="patientResult" type="com.ddt.natrp.web.domain.laboratory.Patient">
+        <id      property="patientId"       column="patient_id"     />
+        <result  property="patientName"     column="patient_name"   />
+        <result  property="age"             column="age"            />
+        <result  property="sex"             column="sex"            />
+        <result  property="patientNo"       column="patient_no"     />
+        <result  property="serialNum"       column="serial_num"     />
+    </resultMap>
+    
+    <sql id="selectReportVo" >
+        select r.report_id, r.patient_id, r.create_time, r.create_by, r.status, r.item, r.result, r.sample_type,receive_time,
+            r.check_time, r.checktor, r.remark, p.patient_id, p.patient_name, p.sex, p.age, p.patient_no, p.serial_num
+        from l_Report r
+            left join l_patientinfo p on r.patient_id = p.patient_id
+    </sql>
+
+    <select id="selectReportList" parameterType="com.ddt.natrp.web.domain.laboratory.Report" resultMap="ReportResultMap">
+        <include refid="selectReportVo"/>
+        <where>
+            <if test="reportId != null">r.report_id = #{reportId} and </if>
+            <if test="patientId != null"> p.patient_id = #{patientId} and </if>
+            <if test="createTime != null">TO_DAYS(r.create_time) = TO_DAYS(#{createTime}) and </if>
+            <if test="receiveTime != null">TO_DAYS(r.receive_time) = TO_DAYS(#{receiveTime}) and </if>
+            <if test="checkTime != null and checkTime != ''">r.check_time = #{checkTime} and </if>
+            <if test="status != null and status != ''">r.status = #{status} and </if>
+            <if test="result != null and result != ''">r.result = #{result} and </if>
+            r.create_by is not null order by r.check_time desc
+        </where>
+    </select>
+
+    <select id="selectReportById" parameterType="Long" resultMap="ReportResultMap">
+        <include refid="selectReportVo" />
+        where r.report_id = #{reportId}
+    </select>
+
+    <select id="selectReportByTime"  resultMap="ReportResultMap">
+        <include refid="selectReportVo"/>
+        <where>
+            <if test="status != null and status != ''">r.status = #{status} and </if>
+            r.receive_time between #{startTime} and #{endTime} order by r.receive_time desc
+        </where>
+    </select>
+
+    <insert id="insertReport" parameterType="com.ddt.natrp.web.domain.laboratory.Report" >
+        insert into l_Report(
+            <if test="patientId != null and patientId != ''">patient_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="item != null and item != ''">item,</if>
+            <if test="result != null and result != ''">result,</if>
+            <if test="sampleType != null and sampleType != ''">sample_type,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="checktor != null and checktor != ''">checktor,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            report_id,receive_time
+        )values(
+            <if test="patientId != null and patientId != ''">#{patientId},</if>
+            <if test="createTime != null "> #{createTime}, </if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="item != null and item != ''">#{item},</if>
+            <if test="result != null and result != ''">#{result},</if>
+            <if test="sampleType != null and sampleType != ''">#{sampleType},</if>
+            <if test="receiveTime != null ">#{receiveTime},</if>
+            <if test="checkTime != null "> #{checkTime}, </if>
+            <if test="checktor != null and checktor != ''">#{checktor},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            #{reportId},sysdate()
+        )
+    </insert>
+
+    <update id="updateReport" parameterType="com.ddt.natrp.web.domain.laboratory.Report">
+        update l_Report
+        <set>
+            <if test="createTime != null "> create_time = #{createTime}, </if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="item != null and item != ''">item = #{item},</if>
+            <if test="result != null and result != ''">result = #{result},</if>
+            <if test="sampleType != null and sampleType != ''">sample_type = #{sampleType},</if>
+            <if test="checktor != null and checktor != ''">checktor = #{checktor},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            check_time = sysdate()
+        </set>
+        where report_id = #{reportId}
+    </update>
+    <delete id="deleteReportById" parameterType="Long">
+        delete from l_Report where report_id = #{reportId}
+    </delete>
+
+</mapper>

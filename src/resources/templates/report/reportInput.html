@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('样本录入')" />
+    <th:block th:include="include :: table" />
+</head>
+<body>
+<th:block th:include="include :: body" />
+<div class="container">
+<div class="col-md-7 column">
+    <form id="save_from" class="form-inline">
+        <div class="col-md-12 column">
+            <div class="form-group" style="float:left;padding:6px;">
+                <label >报告单ID</label><input type="text"  class="form-control" name="reportId" id="report_id" />
+            </div>
+        </div>
+        <div class="col-md-12 column">
+            <hr />
+            <div class="form-group" style="float:bottom;padding:6px;">
+                <label >就诊卡号</label><input type="text"  class="form-control" name="patientId" id="patient_id" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label >患者姓名</label><input type="text"  class="form-control" id="patient_name" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label >患者年龄</label><input type="text"  class="form-control" id="patient_age" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label >患者性别</label><input type="text"  class="form-control" id="patient_sex" />
+            </div>
+        </div>
+        <div class="col-md-12 column" >
+            <hr />
+            <div class="form-group" style="float:left;padding:6px;">
+                <label >开单时间</label><input type="text" readonly="true"  class="form-control" name="createTime" id="create_time" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label >医嘱项目</label><input readonly="true" type="text" class="form-control" name="item" id="item" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label style="float:left;padding:7px;">开单者</label><input type="text" readonly="true" class="form-control" name="createBy" id="requester" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label style="float:left;padding:7px;">审核者</label><input type="text" readonly="true" class="form-control" name="checktor" id="checktor" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label >审核时间</label><input type="text" readonly="true" class="form-control" name="checkTime" id="check_time" />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label>医嘱备注</label><input type="text" class="form-control" name="remark" id="remark" />
+            </div>
+            <div class="form-group" style="display: none;">
+                <label>样本类型</label><input type="text" class="form-control" name="sampleType" id="sample_type" />
+            </div>
+        </div>
+        <div class="col-md-12 column">
+            <hr />
+            <div class="form-group" style="float:left;padding:6px;">
+                <label>报告状态</label><input type="text" readonly="true" class="form-control"  name="status" id="status"  />
+            </div>
+            <div class="form-group" style="float:left;padding:6px;">
+                <label>报告结果</label><select class="form-control" disabled="disabled" name="result" id="result"  style="margin-left: 15px">
+                                        <option value="阴性(-)">阴性(-)</option>
+                                        <option value="阳性(+)">阳性(+)</option>
+                                        <option value="未出">未出</option>
+                                    </select>
+            </div>
+        </div>
+        <div class="col-md-12 column" >
+            <hr />
+            <div class="col-md-2 column">
+                <button type="button" class="btn active btn-default btn-primary" id="save_button">保存数据</button>
+            </div>
+            <div class="col-md-2 column">
+                <button type="button" class="btn btn-default active btn-warning" onclick="javascript:location.reload()">清空重填</button>
+            </div>
+            <div class="col-md-2 column">
+                <input type="file"  id="fileUpload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple />
+            </div>
+        </div>
+    </form>
+    <span id='info' style="color:red;font-size:20px;"></span>
+</div>
+<div class="col-md-5 column">
+    <table id="reportin-table" class="table table-hover table-striped table-condensed"></table>
+</div>
+</div>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/xlsx.full.min.js}"></script>
+<script th:src="@{/js/web/report/reportInput.js}"></script>
+</body>
+</html>

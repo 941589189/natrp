@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head lang="en">
+    <title>核酸检测报告 PDF</title>
+    <style>
+        @page {
+            size: 210mm 297mm; /*设置纸张大小:A4(210mm 297mm)、A3(297mm 420mm) 横向则反过来*/
+            margin: 0.25in;
+            padding: 1em;
+            @bottom-center{
+                content:"NATRP";
+                font-family: ddt;
+                font-size: 12px;
+                color:red;
+            };
+            @top-center { content: element(header) };
+            @bottom-right{
+                content:"第" counter(page) "页  共 " counter(pages) "页";
+                font-family: ddt;
+                font-size: 12px;
+                color:#000;
+            };
+        }
+        body{font-family: 'ddt'}
+        h2{color: crimson}
+        #myheader{
+            width: 500px;
+            height: 22px;
+            border: 1px solid #000000;
+        }
+        table, th , td  {
+            border: 1px solid grey;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+        table tr:nth-child(odd) {
+            background-color: #f1f1f1;
+        }
+        table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<!--这样配置不中文不会显示-->
+<!--<body style="font-family: 宋体">-->
+<body style="font-family: 'SimSun'">
+<div style="text-align:center">
+    <h2 >
+        <span>新冠检测报告单系统</span>
+    </h2>
+</div>
+<div style="text-align:center">
+    <h2 th:text="${title}"></h2>
+</div>
+
+<div>
+    <span>条形码号：</span><span th:text="${data.reportId}"></span><br />
+    <div style="margin-top:12px">
+        <span>姓 名：</span><span th:text="${data.patientName}"></span>
+        <span style="margin-left:80px">性 别：</span><span th:if="${data.patient.sex} eq '1'">男</span><span th:if="${data.patient.sex} eq '2'">女</span>
+        <span style="margin-left:80px">年 龄：</span><span th:text="${data.patient.age}"></span>
+    </div><br />
+    <div>
+        <span>样本类型：</span><span th:if="${data.sampleType} eq 'Q'">咽拭子</span>
+        <span style="margin-left:80px">开单时间：</span><span th:text="${data.createTime}"></span>
+    </div>
+</div>
+<hr />
+<div>
+    <table style="width: 600px;margin-top:20px">
+        <tr>
+            <th>项目</th>
+            <th>结果</th>
+            <th>提示</th>
+            <th>单位</th>
+            <th>参考区间</th>
+        </tr>
+        <tr th:each="info : ${data}">
+            <td th:text="${info.item}"></td>
+            <td th:text="${info.result}"></td>
+            <td th:text="${info.remark}"></td>
+            <td th:text="${info.remark}"></td>
+            <td th:text="${info.result}"></td>
+        </tr>
+    </table>
+</div>
+<hr />
+<div style="margin-top:20px">
+    <span>审核者：</span><span th:text="${data.checktor}"></span><br />
+    <div style="margin-top:12px">
+        <span style="margin-top:20px">审核日期：</span><span th:text="${data.checkTime}"></span>
+        <span style="margin-left:200px">联系方式：</span><span >暂无</span>
+    </div>
+</div>
+</body>
+</html>
